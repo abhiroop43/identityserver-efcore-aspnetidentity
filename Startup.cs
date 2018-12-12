@@ -25,8 +25,10 @@ namespace maqta.identityserver {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices (IServiceCollection services) {
+            string connectionString = Configuration.GetConnectionString ("MaqtaConnection");
+
             services.AddDbContext<ApplicationDbContext> (options =>
-                options.UseSqlServer (Configuration.GetConnectionString ("DefaultConnection")));
+                options.UseSqlServer (connectionString));
 
             services.AddIdentity<ApplicationUser, IdentityRole> ()
                 .AddEntityFrameworkStores<ApplicationDbContext> ()
@@ -41,7 +43,6 @@ namespace maqta.identityserver {
             services.AddMvc ().SetCompatibilityVersion (CompatibilityVersion.Version_2_1);
 
             // configure identity server with in-memory stores, keys, clients and resources
-            string connectionString = Configuration.GetConnectionString ("DefaultConnection");
             var migrationsAssembly = typeof (Startup).GetTypeInfo ().Assembly.GetName ().Name;
 
             // configure identity server with in-memory stores, keys, clients and scopes
